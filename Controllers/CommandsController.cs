@@ -3,6 +3,7 @@ using AutoMapper;
 using Commander.Data;
 using Commander.Dtos;
 using Commander.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -116,6 +117,18 @@ namespace Commander.Controllers
             command = _repository.GetCommandById(id);
 
             return command != null;
+        }
+
+        [HttpGet("coffee")]
+        public ActionResult GetCoffee()
+        {
+            return this.StatusCode(StatusCodes.Status418ImATeapot, "I'm a teapot and cannot get coffee.");
+        }
+
+        [HttpGet("tea")]
+        public ActionResult GetTea()
+        {
+            return Ok();
         }
     }
 }
