@@ -33,9 +33,7 @@ namespace Commander.Controllers
         [HttpGet("{id}", Name = "GetCommandById")]
         public ActionResult<CommandReadDto> GetCommandById(int id)
         {
-            var commandItem = _repository.GetCommandById(id);
-
-            if (commandItem != null)
+            if (TryGetCommand(id, out var commandItem))
             {
                 return Ok(_mapper.Map<CommandReadDto>(commandItem));
             }
@@ -60,8 +58,7 @@ namespace Commander.Controllers
         [HttpPut("{id}")]
         public ActionResult UpdateCommand(int id, CommandUpdateDto commandUpdateDto)
         {
-            var commandModelFromRepo = _repository.GetCommandById(id);
-            if (commandModelFromRepo == null)
+            if (!TryGetCommand(id, out var commandModelFromRepo))
             {
                 return NotFound();
             }
@@ -78,8 +75,7 @@ namespace Commander.Controllers
         [HttpPatch("{id}")]
         public ActionResult PartialCommandUpdate(int id, JsonPatchDocument<CommandUpdateDto> patchDocument)
         {
-            var commandModelFromRepo = _repository.GetCommandById(id);
-            if (commandModelFromRepo == null)
+            if (!TryGetCommand(id, out var commandModelFromRepo))
             {
                 return NotFound();
             }
@@ -104,8 +100,7 @@ namespace Commander.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteCommand(int id)
         {
-            var commandModelFromRepo = _repository.GetCommandById(id);
-            if (commandModelFromRepo == null)
+            if (!TryGetCommand(id, out var commandModelFromRepo))
             {
                 return NotFound();
             }
@@ -114,6 +109,13 @@ namespace Commander.Controllers
             _repository.SaveChanges();
 
             return NoContent();
+        }
+
+        private bool TryGetCommand(int id, out Command command)
+        {
+            command = _repository.GetCommandById(id);
+
+            return command != null;
         }
     }
 }
