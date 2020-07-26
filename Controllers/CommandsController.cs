@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Commander.Controllers
 {
+    /// <inheritdoc />
     [Route("api/commands")]
     [ApiController]
     public class CommandsController : ControllerBase
@@ -31,7 +32,7 @@ namespace Commander.Controllers
         }
 
         //GET api/commands/{id}
-        [HttpGet("{id}", Name = "GetCommandById")]
+        [HttpGet("{id}"/*, Name = "GetCommandById"*/)]
         public ActionResult<CommandReadDto> GetCommandById(int id)
         {
             if (TryGetCommand(id, out var commandItem))
