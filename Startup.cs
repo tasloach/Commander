@@ -1,10 +1,12 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using AutoMapper;
 using Commander.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,8 +34,9 @@ namespace Commander
                     {
                         builder.WithOrigins("http://localhost:4200", "https://localhost:4200")
                             .AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .AllowAnyOrigin();
+                            //.AllowAnyMethod()
+                            .WithMethods(new[] { HttpMethod.Get, HttpMethod.Put }.Select(x => x.ToString()).ToArray());
+                        //.AllowAnyOrigin();
                     }
                 )
             );
