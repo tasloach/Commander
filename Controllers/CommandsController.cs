@@ -120,12 +120,20 @@ namespace Commander.Controllers
             return command != null;
         }
 
+        /// <summary>
+        /// Attempts to get coffee.
+        /// </summary>
+        /// <returns>Returns the 418 I'm a teapot status code.</returns>
         [HttpGet("coffee")]
         public ActionResult GetCoffee()
         {
             return this.StatusCode(StatusCodes.Status418ImATeapot, "I'm a teapot and cannot get coffee.");
         }
 
+        /// <summary>
+        /// Gets tea.
+        /// </summary>
+        /// <returns>Tea.</returns>
         [HttpGet("tea")]
         public ActionResult GetTea()
         {

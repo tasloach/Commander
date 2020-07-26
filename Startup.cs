@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Reflection;
 using AutoMapper;
 using Commander.Data;
 using Microsoft.AspNetCore.Builder;
@@ -27,7 +29,12 @@ namespace Commander
             services.AddControllers().AddNewtonsoftJson(s => s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<ICommanderRepo, SqlCommanderRepo>();
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.XML";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
