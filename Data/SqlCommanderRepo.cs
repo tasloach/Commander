@@ -40,7 +40,7 @@ namespace Commander.Data
         /// <inheritdoc />
         public IEnumerable<Command> GetAllCommands()
         {
-            return _context.Commands.ToList();
+            return _context.Commands;
         }
 
         /// <inheritdoc />
