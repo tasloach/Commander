@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using AutoMapper;
 using Commander.Data;
+using LaunchDarkly.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
@@ -25,6 +26,7 @@ namespace Commander
         public IConfiguration Configuration { get; }
 
         private const string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        private const string LaunchDarklyKey = "FakeKey";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -45,6 +47,9 @@ namespace Commander
             services.AddControllers().AddNewtonsoftJson(s => s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<ICommanderRepo, SqlCommanderRepo>();
+            services.AddSingleton<ILdClient>(new LdClient(LaunchDarklyKey));
+            services.AddSingleton<FeatureFlagService>();
+
             services.AddSwaggerGen(options =>
             {
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.XML";

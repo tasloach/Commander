@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using AutoMapper;
 using Commander.Data;
 using Commander.Dtos;
@@ -6,6 +5,8 @@ using Commander.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Commander.Controllers
 {
@@ -16,11 +17,13 @@ namespace Commander.Controllers
     {
         private readonly ICommanderRepo _repository;
         private readonly IMapper _mapper;
+        private readonly FeatureFlagService _featureFlagService;
 
-        public CommandsController(ICommanderRepo repository, IMapper mapper)
+        public CommandsController(ICommanderRepo repository, IMapper mapper, FeatureFlagService featureFlagService)
         {
             _repository = repository;
             _mapper = mapper;
+            _featureFlagService = featureFlagService;
         }
 
         //GET api/commands
@@ -102,6 +105,10 @@ namespace Commander.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteCommand(int id)
         {
+            var activeFeatureFlags = new[] {"my-flag-1", "my-flag-2"};
+
+            if (activeFeatureFlags.Any(ff => _featureFlagService.Has(ff))) return Ok("Cannot delete at this time due to \"my-flag-1\" flag being turned on.");
+
             if (!TryGetCommand(id, out var commandModelFromRepo))
             {
                 return NotFound();
